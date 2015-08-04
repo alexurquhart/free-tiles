@@ -1,16 +1,16 @@
 $(document).ready(function() {
   "use strict";
   
-  ko.bindingHandlers.option = {
+	ko.bindingHandlers.option = {
 	  update: function(element, valueAccessor) {
 		 var value = ko.utils.unwrapObservable(valueAccessor());
 		 ko.selectExtensions.writeValue(element, value);   
 	  }        
-  };
+	};
 	
 	$('[data-toggle="tooltip"]').tooltip();
   
-  var MapModel = function(data) {
+	var MapModel = function(data) {
 		var self = this;
 		
 		// Flattens the layers object and returns all basemap datasets
@@ -22,14 +22,22 @@ $(document).ready(function() {
 			return basemaps;
 		};
 		
-	this.layers = ko.observableArray(data);
-	this.map = L.map('map').setView([0, 0], 3);
-	this.basemap = null;
-	this.overlay = null;
-	this.selectedBasemap = ko.observable();
-	this.selectedOverlay = ko.observable();
-	this.showOverlay = ko.observable(false);
-	this.basemapLink = ko.observable();
+		this.layers = ko.observableArray(data);
+		this.map = L.map('map').setView([0, 0], 3);
+		this.basemap = null;
+		this.overlay = null;
+		this.selectedBasemap = ko.observable();
+		this.selectedOverlay = ko.observable();
+		this.showOverlay = ko.observable(false);
+		this.basemapLink = ko.observable();
+		this.mapCenter = ko.observable();
+		this.mapZoom = ko.observable();
+		
+		// Update the observables when the map moves
+		this.map.on('moveend', function() {
+			self.mapCenter(self.map.getCenter());
+			self.mapZoom(self.map.getZoom());
+		});
 		
 		this.nextBasemap = function() {
 			var basemaps = getAllBasemaps();
@@ -103,9 +111,9 @@ $(document).ready(function() {
 		
 		// Creates the javascript that will be sent to codepen or jsfiddle
 		this.createJS = ko.pureComputed(function() {
-			var center = self.map.getCenter();
-			var zoom = self.map.getZoom();
-			var jsString = "var map = L.map('map').setView([" + center.lat + ", " + center.lng + "], " + zoom + ");\n";
+			var center = self.mapCenter();
+			var zoom = self.mapZoom()
+			var jsString = "var map = L.map('map').setView([" + self.mapCenter().lat + ", " + self.mapCenter().lng + "], " + self.mapZoom() + ");\n";
 			jsString += "L.tileLayer('" + self.selectedBasemap().endpoint + "').addTo(map);\n";
 			
 			if (self.showOverlay()) {
