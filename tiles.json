@@ -161,23 +161,43 @@
 			"datasets": [
 				{
 					"name": "Blue Marble (January)",
-					"endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jan/{z}/{x}/{y}.png"
+					"endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jan/{z}/{x}/{y}.png"
 				},
 				{
 					"name": "Blue Marble (July)",
-					"endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul/{z}/{x}/{y}.png"
-				},
-				{
-					"name": "Blue Marble B/W (January)",
-					"endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-jan-bw/{z}/{x}/{y}.png"
+					"endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul/{z}/{x}/{y}.png"
 				},
 				{
 					"name": "Blue Marble Topo & Bathy B/W (July)",
-					"endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul-bw/{z}/{x}/{y}.png"
+					"endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul-bw/{z}/{x}/{y}.png"
 				},
 				{
 					"name": "Control Room",
-					"endpoint": "https://a.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png"
+					"endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png"
+				},
+				{
+					"name": "Geography Class",
+					"endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.geography-class/{z}/{x}/{y}.png"
+				},
+				{
+					"name": "World Dark",
+					"endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png"
+				},
+				{
+					"name": "World Light",
+					"endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-light/{z}/{x}/{y}.png"
+				},
+				{
+					"name": "World Glass",
+					"endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-glass/{z}/{x}/{y}.png"
+				},
+				{
+					"name": "World Print",
+					"endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-print/{z}/{x}/{y}.png"
+				},
+				{
+					"name": "World Blue",
+					"endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-blue/{z}/{x}/{y}.png"
 				}
 			],
 			"overlays": [
