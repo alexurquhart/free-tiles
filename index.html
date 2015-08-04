@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<title>Free Tile Services</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
+  
+  <style>
+    html, body, #container {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+    }
+		
+		.navbar-form label {
+			color: #777;
+		}
+    
+    #container {
+      padding-top: 50px;
+    }
+    
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+		
+		#error-box {
+			margin-top: 100px;
+		}
+		
+		#gh-star {
+			margin-top: 15px;
+		}
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Free Tile Services</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <form class="navbar-form navbar-left">
+						<label for="basemap">Basemaps: </label>
+						<select name="basemap" class="form-control" data-bind="foreach: layers, value: selectedBasemap">
+								<optgroup data-bind="attr: {label: name}, foreach: datasets">
+										<option data-bind="text: name, option: $data"></option>
+								</optgroup>
+						</select>
+        </form>
+				<form class="navbar-form navbar-left" data-bind="visible: showOverlay">
+						<label for="overlay">Overlays: </label>
+						<select name="overlay" class="form-control" data-bind="foreach: layers, value: selectedOverlay">
+								<!-- ko if: overlays.length > 0 -->
+								<optgroup data-bind="attr: {label: name}, foreach: overlays">
+										<option data-bind="text: name, option: $data"></option>
+								</optgroup>
+								<!-- /ko -->
+						</select>
+				</form>
+				<div class="btn-group navbar-left" role="group">
+					<button type="button" class="btn btn-default navbar-btn" data-toggle="tooltip" data-placement="bottom" data-bind="click: prevBasemap" title="Previous basemap"><span class="glyphicon glyphicon-step-backward"></span></button>
+					<button type="button" class="btn btn-default navbar-btn" data-toggle="tooltip" data-placement="bottom" data-bind="click: nextBasemap" title="Next basemap"><span class="glyphicon glyphicon-step-forward"></span></button>
+					<button type="button" class="btn btn-danger navbar-btn" data-toggle="tooltip" data-placement="bottom" title="Remove overlay" data-bind="visible: showOverlay, , click: toggleOverlay"><span class="glyphicon glyphicon-minus"></span></button>
+					<button type="button" class="btn btn-success navbar-btn" data-toggle="tooltip" data-placement="bottom" title="Add overlay" data-bind="visible: !showOverlay(), click: toggleOverlay"><span class="glyphicon glyphicon-plus"></span></button>
+					<button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#modal-id" ><span class="glyphicon glyphicon-info-sign"></span> Info</button>
+				</div>
+					
+				<div id="gh-star" class="navbar-right hidden-sm">
+					<iframe src="https://ghbtns.com/github-btn.html?user=alexurquhart&type=follow&count=true" frameborder="0" scrolling="0" width="175px" height="20px"></iframe>
+					<iframe src="https://ghbtns.com/github-btn.html?user=alexurquhart&repo=hugo-geo&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+				</div>
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
+  
+  <div id="container">
+<div id="map"></div>
+		<div id="error-box" class="container hidden">
+			<div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+				<div class="alert alert-danger text-center" role="alert"><strong>Error:</strong> Could not load layer metadata!</div>
+			</div>
+		</div>
+  </div>
+	
+	<div class="modal fade" id="modal-id" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Layer Information</h4>
+				</div>
+				<div class="modal-body clearfix">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Basemap: <strong data-bind="text: selectedBasemap().name"></strong>
+						</div>
+						<div class="panel-body">
+							<p>Leaflet Tile URL: <code data-bind="text: selectedBasemap().endpoint"></code></p>
+						</div>
+					</div>
+					
+					<!-- ko if: showOverlay -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Overlay: <strong data-bind="text: selectedOverlay().name"></strong>
+						</div>
+						<div class="panel-body">
+							<p>Leaflet Tile URL: <code data-bind="text: selectedOverlay().endpoint"></code></p>
+						</div>
+					</div>
+					<!-- /ko -->
+
+					<div class="conainer-fluid">
+						<div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+							<form class="pull-left" action="http://codepen.io/pen/define" method="POST" target="_blank">
+								<input type="hidden" name="data" data-bind="value: codePenData">
+								<button type="submit" class="btn btn-lg btn-primary"><i class="fa fa-codepen"></i> Launch CodePen</button>
+							</form>
+							<form class="pull-right" action="http://jsfiddle.net/api/post/jquery/2.1.3/" method="POST" target="_blank">
+								<input type="hidden" name="html" data-bind="value: jsFiddleData().html">
+								<input type="hidden" name="css" data-bind="value: jsFiddleData().css">
+								<input type="hidden" name="js" data-bind="value: jsFiddleData().js">
+								<input type="hidden" name="resources" value="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js,https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
+								<input type="hidden" name="dtd" value="html 5">
+								<input type="hidden" name="wrap" value="l">
+								<button type="submit" class="btn btn-lg btn-primary"><i class="fa fa-jsfiddle"></i> Launch JSFiddle</button>
+							</form>
+						</div>
+					</div>	
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="App.js"></script>
+</body>
+</html>
