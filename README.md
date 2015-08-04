@@ -13,7 +13,7 @@ The Info button provides the endpoints for the basemap/overlay, as well as links
 JsFiddle
 
 ## Contributing
-Feel free to submit a pull request with any additional high quality tile providers. For the tile being I would like to exclude
+Feel free to submit a pull request with any additional high quality tile providers. For the time being I would like to exclude
 tile providers that cover a limited geographic area. Datasets should be continent or world wide, and load reasonably quick.
 
 ## TODO
