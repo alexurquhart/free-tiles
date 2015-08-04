@@ -30,11 +30,11 @@ $(document).ready(function() {
 		this.selectedOverlay = ko.observable();
 		this.showOverlay = ko.observable(false);
 		this.basemapLink = ko.observable();
-		this.mapCenter = ko.observable();
-		this.mapZoom = ko.observable();
+		this.mapCenter = ko.observable({lat: 0, lng: 0});
+		this.mapZoom = ko.observable(3);
 		
 		// Update the observables when the map moves
-		this.map.on('moveend', function() {
+		this.map.on('move', function() {
 			self.mapCenter(self.map.getCenter());
 			self.mapZoom(self.map.getZoom());
 		});
